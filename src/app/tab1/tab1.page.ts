@@ -3,6 +3,10 @@ import { Product } from '../models/product.model';
 import { CartService } from '../services/cart.service';
 import { Router } from '@angular/router';
 import { ProductService } from '../services/product.service';
+import { AlertController } from '@ionic/angular';
+
+export var iEdit: number;
+export var productEdit: Product;
 
 @Component({
   selector: 'app-tab1',
@@ -39,37 +43,9 @@ export class Tab1Page {
     }
   ];
 
-  constructor(private cartService: CartService, private router: Router , private ProductService: ProductService) {
-    this.products.push({
-      name: "Aguacate",
-      price: 100,
-      description: "Lorem ipsum dolor sit amet.",
-      type: "Frutas y Verduras",
-      photo: "https://picsum.photos/500/300?random",
-    });
-    this.products.push({
-      name: "Coca Cola",
-      price: 20,
-      description: "Lorem ipsum dolor sit amet.",
-      type: "Abarrotes",
-      photo: "https://picsum.photos/500/300?random"
-    });
-    this.products.push({
-      name: "Jabón Zote",
-      price: 40,
-      description: "Lorem ipsum dolor sit amet.",
-      type: "Limpieza",
-      photo: "https://picsum.photos/500/300?random"
-    });
-    this.products.push({
-      name: "Aspirina",
-      price: 50,
-      description: "Lorem ipsum dolor sit amet.",
-      type: "Farmacia",
-      photo: "https://picsum.photos/500/300?random"
-    });
-    this.productsFounds = this.products;
+  constructor(private cartService: CartService, private router: Router , private ProductService: ProductService, private alertController: AlertController) {
     this.productsFounds = ProductService.getProducts()
+
 
   }
 
@@ -99,7 +75,34 @@ export class Tab1Page {
   public openAddProductPage(){
     // Llama la pantalla de agregar producto
     this.router.navigate(['/add-product']);
-    
+  }
 
+  public async removeProduct(pos: number){
+    const alert = await this.alertController.create({
+      header: 'Eliminar Producto',
+      message: `¿deseas eliminar?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+              this.ProductService.removeProduct(pos);
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  public openUpdateProductPage(pos: number, p: Product){
+    iEdit = pos;
+    productEdit = p;
+    // Llama la pantalla de agregar producto
+    this.router.navigate(['/update-product']);
   }
 }
+
+

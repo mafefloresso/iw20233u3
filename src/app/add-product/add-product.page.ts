@@ -12,7 +12,9 @@ import { Route, Router } from '@angular/router';
 export class AddProductPage {
 
   public producForm: FormGroup
-  constructor(private fomBuilder: FormBuilder, private productService: ProductService,private toastController: ToastController, private router:Router) { 
+  constructor(private fomBuilder: FormBuilder, 
+    private productService: ProductService,
+    private toastController: ToastController, private router:Router) { 
     this.producForm = this.fomBuilder.group({
       name:['',Validators.required],
       price:[0,Validators.required],
